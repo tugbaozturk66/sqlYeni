@@ -1,0 +1,113 @@
+--Aþaðýdaki gibi tedarikciler adýnda bir tablo oluþturunuz ve vergi_no
+   --sutununu primary key yapýnýz. Ayrýca aþaðýdaki verileri tabloya giriniz.
+    vergi_no NUMBER(3),
+    firma_ismi VARCHAR2(50),
+    irtibat_ismi VARCHAR2(50),
+    INSERT INTO tedarikciler VALUES (101, 'IBM', 'Kim Yon');
+	INSERT INTO tedarikciler VALUES (102, 'Huawei', 'Çin Li');
+	INSERT INTO tedarikciler VALUES (103, 'Erikson', 'Maki Tammamen');
+    INSERT INTO tedarikciler VALUES (104, 'Apple', 'Adam Eve');
+   -- Sonrasýnda aþaðýdaki gibi urunler adýnda bir baþka tablo oluþturunuz ve bu
+    --tablonun ted_vergino sutunu ile tedarikciler tablosunun vergi_no sutunu
+    --iliþkilendiriniz. Verileri giriniz.
+    ted_vergino NUMBER(3),
+    urun_id NUMBER(11),
+    urun_isim VARCHAR2(50),
+    musteri_isim VARCHAR2(50),
+    INSERT INTO urunler VALUES(101, 1001,'Laptop', 'Ayþe Can');
+    INSERT INTO urunler VALUES(102, 1002,'Phone', 'Fatma Aka');
+    INSERT INTO urunler VALUES(102, 1003,'TV', 'Ramazan Öz');
+    INSERT INTO urunler VALUES(102, 1004,'Laptop', 'Veli Han');
+    INSERT INTO urunler VALUES(103, 1005,'Phone', 'Canan Ak');
+    INSERT INTO urunler VALUES(104, 1006,'TV', 'Ali Bak');
+    INSERT INTO urunler VALUES(104, 1007,'Phone', 'Aslan Yýlmaz');
+CREATE table tedarikciler1(
+vergi_no NUMBER(3)PRIMARY KEY,
+    firma_ismi VARCHAR2(50),
+    irtibat_ismi VARCHAR2(50)
+    );
+    INSERT INTO tedarikciler1 VALUES (101, 'IBM', 'Kim Yon');
+	INSERT INTO tedarikciler1 VALUES (102, 'Huawei', 'Çin Li');
+	INSERT INTO tedarikciler1 VALUES (103, 'Erikson', 'Maki Tammamen');
+    INSERT INTO tedarikciler1 VALUES (104, 'Apple', 'Adam Eve');
+    drop table tedarikciler1;
+  create table urunler8(
+  ted_vergino NUMBER(3),
+    urun_id NUMBER(11),
+    urun_isim VARCHAR2(50),
+    musteri_isim VARCHAR2(50),
+    CONSTRAINT urunler8_fk FOREIGN KEY(ted_vergino) REFERENCES tedarikciler1 (vergi_no)
+    );
+     INSERT INTO urunler8 VALUES(101, 1001,'Laptop', 'Ayþe Can');
+    INSERT INTO urunler8 VALUES(102, 1002,'Phone', 'Fatma Aka');
+    INSERT INTO urunler8 VALUES(102, 1003,'TV', 'Ramazan Öz');
+    INSERT INTO urunler8 VALUES(102, 1004,'Laptop', 'Veli Han');
+    INSERT INTO urunler8 VALUES(103, 1005,'Phone', 'Canan Ak');
+    INSERT INTO urunler8 VALUES(104, 1006,'TV', 'Ali Bak');
+    INSERT INTO urunler8 VALUES(104, 1007,'Phone', 'Aslan Yýlmaz');
+    drop table urunler8;
+    select * from urunler8;
+    select * from tedarikciler1;
+    -- SYNTAX
+    ----------
+    -- UPDATE tablo_adý
+    -- SET sutun1 = yeni_deger1, sutun2 = yeni_deger2,...
+    -- WHERE koþul;
+    
+    --ornek vergi nosu 101 olan tedarikcinin firma ismini 'LG' olarak degistirin
+    
+    UPDATE tedarikciler1
+    SET firma_ismi='LG'
+    WHERE vergi_no=101;
+    select * from tedarikciler1;   
+    
+    --ornek2: tedarikciler tablosundaki tum firma isimlerini samsung olarak gunceller
+    UPDATE tedarikciler1
+    set firma_ismi='SAMSUNG';
+    select * from tedarikciler1;
+    
+    --0rnek3: ORNEK3: vergi_no’su 102 olan tedarikcinin ismini 'Lenovo' ve irtibat_ismi’ni
+  --'Ali Veli' olarak güncelleyeniz.
+  
+  UPDATE tedarikciler1
+  set firma_ismi='LENOVO',irtibat_ismi='Ali Veli'
+  where vergi_no=102;
+  select * from tedarikciler1;
+  
+  --ornek4 firm aismi samsung olan tedarikcinin irtibat ismini Ayse Yilmaz yapin
+  UPDATE tedarikciler1
+  set irtibat_ismi='Ayse Yilmaz'
+  where firma_ismi='SAMSUNG';
+  select * from tedarikciler1;
+  
+  --ornek5 urunler tablosundaki urun_id deðeri 1004'ten büyük olanlarýn urun_id
+  --deðerlerini bir arttýrýnýz
+  
+  UPDATE urunler8
+  set urun_id=urun_id+1
+  where urun_id>1004;
+  select * from urunler8;
+  
+  -- ornek6: urunler tablosundaki tum urunlerin  urun id degerini ted vergi no
+  --sutun degeri ile toplayarak guncelleyiniz
+  UPDATE urunler8
+  set urun_id=urun_id+ted_vergino;
+  select * from urunler8;
+  --ornek 7 urunler tablosundan Ali Bak’in aldigi urunun ismini, TEDARÝKCÝ
+ --TABLOSUNDA ÝRTÝBAT_ÝSMÝ 'Adam Eve' OLAN FÝRMANIN ÝSMÝ (FÝRMA_ÝSMÝ) ile
+ --degistiriniz.
+    UPDATE urunler8
+    set urun_isim=(select firma_ismi from tedarikciler1
+    where irtibat_ismi='Adam Eve')
+    where musteri_isim='Ali Bak';
+    
+    select * from urunler8;
+    
+    --ornek8 Laptop satin alan musterinin ismini, apple in irtibat ismi ile degistirn
+    UPDATE urunler8
+    SET musteri_isim=(
+    SELECT irtibat_ismi FROM tedarikciler1 where firma_ismi='Apple') 
+    where urun_isim='Laptop';
+    
+    
+    
